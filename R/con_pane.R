@@ -40,7 +40,8 @@ list_columns <- function(table) {
       )
     } 
   } else if (table == "my_timeline"){
-    res <- without_warning(get_my_timeline)(n = 10)
+    nw <- attempt::without_warning(get_my_timeline)
+    res <- nw(n = 10)
     if (nrow(res) != 0 ) {
       res <-   data.frame(
         name = res$screen_name,
@@ -49,7 +50,8 @@ list_columns <- function(table) {
       )
     }
   } else if (table == "direct_messages"){
-    res <- without_warning(direct_messages)(n = 10)
+    nw <- attempt::without_warning(direct_messages)
+    res <- nw(n = 10)
     if (nrow(res) != 0 ) {
       res <-   data.frame(
         name = res$sender_screen_name,
@@ -68,9 +70,11 @@ preview_object <- function(table, limit) {
   if (table == "me"){
     res <- iris
   } else if (table == "my_timeline"){
-    res <- without_warning(get_my_timeline)()
+    nw <- attempt::without_warning(get_my_timeline)
+    res <- nw()
   } else if (table == "direct_messages"){
-    res <- without_warning(direct_messages)()
+    nw <- attempt::without_warning(direct_messages)
+    res <- nw()
   }
   head(res, limit)
 }
@@ -110,13 +114,13 @@ on_connection_opened <- function(token) {
                                 GitHub = list(
                                   icon = system.file("icons","github.png", package = "rtweet"),
                                   callback = function() {
-                                    browseURL("https://github.com/mkearney/rtweet")
+                                    utils::browseURL("https://github.com/mkearney/rtweet")
                                   }
                                 ),
                                 Doc = list(
                                   icon = system.file("icons","documentation.png", package = "rtweet"),
                                   callback = function() {
-                                    browseURL("http://rtweet.info/")
+                                    utils::browseURL("http://rtweet.info/")
                                   }
                                 ),
                                 SendTweet = list(
@@ -194,27 +198,27 @@ run_app <- function(){
 #' @param token your rtweet token
 #' 
 #' @importFrom miniUI miniPage gadgetTitleBar miniTabstripPanel miniTabPanel miniContentPanel
-#' @importFrom shiny textAreaInput icon
+#' @importFrom shiny textAreaInput icon fileInput h6 actionButton observeEvent stopApp runGadget paneViewer
 #' @importFrom glue glue
 #' 
 #' @export
 
 tweet_widget <- function(token = get_token()) {
   
-  ui <- miniPage(
-    gadgetTitleBar("Create a new tweet"),
-    miniContentPanel(
-      textAreaInput(inputId = "status", label = "Status", value = "my first rtweet #rstats"),
-      fileInput(inputId = "media", label = "Media"),
-      h6("If you upload a file, this might take some time"),
-      textAreaInput(inputId = "in_reply_to_status_id", label = "in reply to status",
+  ui <- miniUI::miniPage(
+    miniUI::gadgetTitleBar("Create a new tweet"),
+    miniUI::miniContentPanel(
+      shiny::textAreaInput(inputId = "status", label = "Status", value = "my first rtweet #rstats"),
+      shiny::fileInput(inputId = "media", label = "Media"),
+      shiny::h6("If you upload a file, this might take some time"),
+      shiny::textAreaInput(inputId = "in_reply_to_status_id", label = "in reply to status",
                     value = NULL),
-      actionButton("button", "Send")
+      shiny::actionButton("button", "Send")
     )
   )
   
   server <- function(input, output, session) {
-    observeEvent(input$button, {
+    shiny::observeEvent(input$button, {
       inFile <- input$media
       if (is.null(inFile)) {
         media <- NULL
@@ -228,11 +232,11 @@ tweet_widget <- function(token = get_token()) {
                  media = returnValue$media,
                  in_reply_to_status_id = returnValue$in_reply_to_status_id, 
                  token = token)
-      browseURL(glue("https://twitter.com/{token$credentials$screen_name}"))
+      utils::browseURL(glue::glue("https://twitter.com/{token$credentials$screen_name}"))
     })
-    observeEvent(input$done, { stopApp() } )
+    shiny::observeEvent(input$done, { shiny::stopApp() } )
   }
-  runGadget(ui, server, viewer = paneViewer())
+  shiny::runGadget(ui, server, viewer = shiny::paneViewer())
 }
 
 #' Launch the RStudio Connection Pane
