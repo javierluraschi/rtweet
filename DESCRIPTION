@@ -1,9 +1,17 @@
 Package: rtweet
 Type: Package
-Version: 0.6.20
+Version: 0.7.0
 Title: Collecting Twitter Data
 Date: 2018-03-10
-Authors@R: person("Michael W.", "Kearney", "", "kearneymw@missouri.edu", c("aut", "cre"))
+Authors@R: 
+    c(person(given = "Michael W.",
+             family = "Kearney",
+             role = c("aut", "cre"),
+             email = "kearneymw@missouri.edu"),
+      person(given = "Colin",
+             family = "Fay",
+             role = "ctb",
+             email = "contact@colinfay.me"))
 Description: An implementation of calls designed to collect and
     organize Twitter data via Twitter's REST and stream Application
     Program Interfaces (API), which can be found at the following URL:
@@ -18,17 +26,20 @@ Imports:
     readr,
     tibble,
     utils,
-    hms
+    hms,
+    shiny,
+    miniUI,
+    attempt,
+    glue
 License: MIT + file LICENSE
 URL: https://CRAN.R-project.org/package=rtweet
 BugReports: https://github.com/mkearney/rtweet/issues
 Encoding: UTF-8
-Suggests:
+Suggests: 
     ggplot2,
     knitr,
     rmarkdown,
     testthat,
-    glue,
     magick,
     webshot,
     scales
