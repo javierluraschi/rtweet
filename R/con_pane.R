@@ -146,6 +146,24 @@ rsApiUpdateDialog <- function(code) {
 
 ui <- function(){
   tags$div(
+    tags$head(
+      tags$style(
+        HTML(paste("
+          .shiny-input-container {
+            display: table-row;
+            height: 24px;
+          }
+          .shiny-input-container > label {
+            display: table-cell;
+            width: 145px;
+          }
+          .shiny-input-container > input {
+            display: table-cell;
+            width: 300px;
+          }
+        ", sep = ""))
+      )
+    ),
     div(style = "table-row",
         textInput(
           "appname",
