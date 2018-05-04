@@ -1,4 +1,4 @@
-Name: rtweet
+Name: Twitter
 ShinyApp: run_app
 HelpUrl: http://rtweet.info
 Icon: icons/rtweet.png
